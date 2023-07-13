@@ -1,63 +1,50 @@
 import requests
 from requests import Response
 from ..models.login_credentials_model import login_credentials_model
+from requests import session
+
 
 class LoginApi:
-    def __int__(self, host):
+    def __int__(self, host, headers=None):
         self.host = host
+        self.session = session()
+        if headers:
+            self.session.headers.update(headers)
 
-    def post_v1_account_login(self, json: login_credentials_model) -> Response:
+    def post_v1_account_login(self, json: login_credentials_model, **kwargs) -> Response:
         """
         :param json login_credentials_model
         Authenticate via credentials
         :return:
         """
-        headers = {
-            'X-Dm-Bb-Render-Mode': '<string>',
-            'Content-Type': 'application/json',
-            'Accept': 'text/plain'
-        }
 
-        response = requests.request(
-            method="POST",
+        response = self.session.post(
             url=f"{self.host}/v1/account/login",
-            headers=headers,
-            json=json
+            json=json,
+            **kwargs
         )
         return response
 
-    def delete_v1_account_login(self):
+    def delete_v1_account_login(self, **kwargs) -> Response:
         """
         Logout as current user
         :return:
         """
-        headers = {
-            'X-Dm-Auth-Token': '<string>',
-            'X-Dm-Bb-Render-Mode': '<string>',
-            'Accept': 'text/plain'
-        }
 
-        response = requests.request(
-            method="DELETE",
+        response = self.session.delete(
             url=f"{self.host}/v1/account/login",
-            headers=headers
+            **kwargs
         )
         return response
 
-    def delete_v1_account_login_all(self):
+    def delete_v1_account_login_all(self, **kwargs) -> Response:
         """
         Logout from every device
         :return:
         """
-        headers = {
-            'X-Dm-Auth-Token': '<string>',
-            'X-Dm-Bb-Render-Mode': '<string>',
-            'Accept': 'text/plain'
-        }
 
-        response = requests.request(
-            method="DELETE",
+        response = self.session.delete(
             url=f"{self.host}/v1/account/login/all",
-            headers=headers
+            **kwargs
         )
         return response

@@ -4,120 +4,93 @@ from ..models.registration_model import registration_model
 from ..models.reset_password_model import reset_password_model
 from ..models.change_email_model import change_email_model
 from ..models.change_password_model import change_password_model
-class AccountApi:
-    def __int__(self, host):
-        self.host = host
+from requests import session
 
-    def post_v1_account(self, json: registration_model) -> Response:
+
+class AccountApi:
+    def __int__(self, host, headers=None):
+        self.host = host
+        self.session = session()
+        if headers:
+            self.session.headers.update(headers)
+        # self.session.headers.update(headers) if headers else None
+
+    def post_v1_account(self, json: registration_model, **kwargs) -> Response:
         """
         :param json registration_model
         Register new user
         :return:
         """
 
-        response = requests.request(
-            method="POST",
+        response = self.session.post(
             url=f"{self.host}/v1/account",
-            json=json)
+            json=json,
+            **kwargs
+        )
         return response
 
-    def post_v1_account_password(self, json: reset_password_model) -> Response:
+    def post_v1_account_password(self, json: reset_password_model, **kwargs) -> Response:
         """
         :param json reset_password_model
         Reset registered user password
         :return:
         """
 
-        headers = {
-            'X-Dm-Auth-Token': '<string>',
-            'X-Dm-Bb-Render-Mode': '<string>',
-            'Content-Type': 'application/json',
-            'Accept': 'text/plain'
-        }
-
-        response = requests.request(
-            method="POST",
+        response = self.session.post(
             url=f"{self.host}/v1/account/password",
-            headers=headers,
-            json=json
+            json=json,
+            **kwargs
         )
         return response
 
-    def put_v1_account_email(self, json: change_email_model) -> Response:
+    def put_v1_account_email(self, json: change_email_model, **kwargs) -> Response:
         """
         :param json change_email_model
         Change registered user email
         :return:
         """
-        headers = {
-            'X-Dm-Auth-Token': '<string>',
-            'X-Dm-Bb-Render-Mode': '<string>',
-            'Content-Type': 'application/json',
-            'Accept': 'text/plain'
-        }
 
-        response = requests.request(
-            method="PUT",
+        response = self.session.put(
             url=f"{self.host}/v1/account/email",
-            headers=headers,
-            json=json
+            json=json,
+            **kwargs
         )
         return response
 
-    def put_v1_account_password(self, json: change_password_model) -> Response:
+    def put_v1_account_password(self, json: change_password_model, **kwargs) -> Response:
         """
         :param json change_password_model
         Change registered user password
         :return:
         """
 
-        headers = {
-            'X-Dm-Auth-Token': '<string>',
-            'X-Dm-Bb-Render-Mode': '<string>',
-            'Content-Type': 'application/json',
-            'Accept': 'text/plain'
-        }
-
-        response = requests.request(
-            method="PUT",
+        response = self.session.put(
             url=f"{self.host}/v1/account/password",
-            headers=headers,
-            json=json
+            json=json,
+            **kwargs
         )
         return response
 
-    def put_v1_account_token(self):
+    def put_v1_account_token(self, token: str, **kwargs) -> Response:
         """
         Activate registered user
         :return:
         """
-        token = '23232'
-        headers = {
-            'X-Dm-Auth-Token': '<string>',
-            'X-Dm-Bb-Render-Mode': '<string>',
-            'Accept': 'text/plain'
-        }
 
-        response = requests.request(
-            method="PUT",
+        response = self.session.put(
             url=f"{self.host}/v1/account/{token}",
-            headers=headers
+            **kwargs
         )
         return response
 
-    def get_v1_account(self):
+    def get_v1_account(self, **kwargs) -> Response:
         """
         Get current user
         :return:
         """
-        headers = {
-            'X-Dm-Auth-Token': '<string>',
-            'X-Dm-Bb-Render-Mode': '<string>',
-            'Accept': 'text/plain'
-        }
 
-        response = requests.request(
-            method="GET",
+        response = self.session.get(
             url=f"{self.host}/v1/account",
-            headers=headers)
+            **kwargs
+        )
         return response
