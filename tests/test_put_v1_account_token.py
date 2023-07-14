@@ -1,22 +1,12 @@
 import requests
 
-def put_v1_account_token():
-    """
-    Activate registered user
-    :return:
-    """
-    token = '23232'
-    url = f"http://localhost:5051/v1/account/{token}"
+from services.dm_api_account import DmApiAccount
 
-    headers = {
-      'X-Dm-Auth-Token': '<string>',
-      'X-Dm-Bb-Render-Mode': '<string>',
-      'Accept': 'text/plain'
-    }
 
-    response = requests.request(
-        method="PUT",
-        url=url,
-        headers=headers
+def test_put_v1_account_token():
+    api = DmApiAccount(host='http://localhost:5051')
+    token = 'cd1d618d-5b0e-43f3-84b0-6c344b9c02cb'
+    response = api.account.put_v1_account_token(
+        token=token
     )
-    return response
+    print(response)
